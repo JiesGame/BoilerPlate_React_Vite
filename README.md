@@ -10,3 +10,16 @@ To do list :
 - Components :
   - Fetch
   - Navbar
+
+
+- Features :
+  - Light/Dark mode
+
+Installé :
+
+    react-hook-form
+    YUP
+
+    pnpm install react-hook-form
+    pnpm install yup
+    pnpm install @hookform/resolvers
