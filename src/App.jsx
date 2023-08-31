@@ -5,6 +5,7 @@ import { Navbar } from "./components/Navbar";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
 import './App.css';
+import { ForgotPassword } from "./pages/ForgotPassword";
 
 function App() {
 
@@ -18,6 +19,7 @@ function App() {
           <Route path="*" element={<Navigate to="/404" replace/>}/>
           <Route path='register' element={<Register />} />
           <Route path='login' element={<Login />} />
+          <Route path='forgot_password' element={<ForgotPassword />} />
         </Routes>
       </Router>
     </>

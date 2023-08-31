@@ -6,7 +6,7 @@ import Cookies from 'js-cookie';
 import { useAtom } from 'jotai';
 import { userAtom } from '../store/atoms';
 
-export const Login = () => {
+export const ForgotPassword = () => {
   const schema = yup.object().shape({
     email: yup.string().required("L'email est requis."),
     password: yup.string().required(),
@@ -52,6 +52,7 @@ export const Login = () => {
 
   return (
     <div className="w-[26rem]">
+      <p>MOT DE PASSE OUBLIE</p>
       <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -72,9 +73,9 @@ export const Login = () => {
           <Link to="/register" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
             Créer un compte
           </Link>
-          <Link to="/forgot_password" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+          <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
             Mot de passe oublié ?
-          </Link>
+          </a>
         </div>
       </form>
       <p className="text-center text-gray-500 text-xs">

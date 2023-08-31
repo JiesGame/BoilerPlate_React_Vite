@@ -5,6 +5,9 @@ import * as yup from 'yup';
 import APIManager from '../services/axios';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
+import { useAtom } from 'jotai';
+import { userAtom } from '../store/atoms';
 
 export const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -14,7 +17,7 @@ export const Register = () => {
     password_confirmation: yup.string().oneOf([yup.ref("password"), null], "Les mots de passe ne correspondent pas").required("La confirmation du mot de passe est nécessaire."),
     confirmationCGU: yup.bool().oneOf([true], "Vous devez accepter les conditions générales d'utilisation.")
   });
-
+  const [userInfo, setUserInfo] = useAtom(userAtom)
   const navigate = useNavigate();
   const {register, handleSubmit, formState: {errors} } = useForm({
     resolver: yupResolver(schema),
@@ -25,20 +28,33 @@ export const Register = () => {
     try {
     const response = await APIManager.registerUser(data.email, data.password, data.password_confirmation);
     console.log(response);
-    const connect = await fetch("http://127.0.0.1:3000/users/sign_in", {
+    fetch("http://127.0.0.1:3000/users/sign_in", {
       method: "POST",
       headers: {
         "Content-Type" : "application/json"
       },
       body: JSON.stringify({
-        user: {
-          email: data.email,
-          password: data.password
+        "user": {
+          "email": data.email,
+          "password": data.password
         }
       })
     })
-    .then(response => console.log(response));
-    console.log(connect);
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+      Cookies.set('token',response.headers.get('Authorization').split(" ")[1], { expires: 7 })
+      return response.json();
+    })
+    .then(data => {
+      console.log("Response data:", data);
+      Cookies.set('userInfo', JSON.stringify({"id":data.user.id, "email":data.user.email}), { expires: 7 })
+      setUserInfo({"id":data.user.id, "email":data.user.email, "token":Cookies.get('token')})
+    })
+    .catch(error => {
+      console.error("Fetch error:", error);
+    });
     navigate('/');
     } catch (error) {
       if (error.response && error.response.status === 422) {
