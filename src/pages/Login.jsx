@@ -29,6 +29,7 @@ export const Login = () => {
         }
       })
     })
+    .then(response => console.log(response.body))
     .then(response => (
       Cookies.set('token',response.headers.get('Authorization').split(" ")[1])))
     .then(console.log("Connexion réussie!"))

@@ -5,4 +5,5 @@ import Cookies from 'js-cookie';
 export const userAtom = atom({
   id: Cookies.get('id') || "",
   email: Cookies.get('email') || "",
+  token: Cookies.get('token') || ""
 });
