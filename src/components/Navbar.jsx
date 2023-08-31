@@ -3,6 +3,7 @@ import { Collapse, Dropdown, initTE } from "tw-elements";
 import { Link } from "react-router-dom";
 import logo from "../assets/logo.svg";
 import "../App.css";
+import { Logout } from "./Logout";
 
 export const Navbar = () => {
     useEffect(() => {
@@ -16,9 +17,10 @@ export const Navbar = () => {
         <div className="flex justify-end w-auto relative">
           <div id="navButton" className="flex-grow text-lg mr-6">
             <Link to="/" className="inline-block mr-2"> Accueil </Link>
-            <Link to="*" className="inline-block mr-2">Page_1</Link>
-            <Link to="*" className="inline-block mr-2">Page_2</Link>
+            <Link to="*" className="inline-block mr-2">Login</Link>
+            <Link to="*" className="inline-block mr-2">Register</Link>
             <Link to="*" className="inline-block mr-4">Page_3</Link>
+            <Logout />
             <div className="absolute top-1/2 transform -translate-y-1/2 right-0 mr-2" data-te-dropdown-ref>
               <a className="hidden-arrow whitespace-nowrap transition duration-150 ease-in-out motion-reduce:transition-none" id="dropdownMenuButton2" role="button" data-te-dropdown-toggle-ref aria-expanded="false">
                 <img id="dropdown" src={logo} className="rounded-full" style={{ height: `25px`, width: `25px` }}/>

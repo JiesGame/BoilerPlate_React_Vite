@@ -22,7 +22,6 @@ export const Register = () => {
   );
 
   const onSubmit = async (data) => {
-    console.log(data)
     try {
     const response = await APIManager.registerUser(data.email, data.password, data.password_confirmation);
     console.log(response);
@@ -37,16 +36,15 @@ export const Register = () => {
           password: data.password
         }
       })
-    });
-    console.log(connect.json());
+    })
+    .then(response => console.log(response));
+    console.log(connect);
     navigate('/');
     } catch (error) {
       if (error.response && error.response.status === 422) {
         setErrorMessage("Cet email est déjà pris. Merci d'en sélectionner un autre.");
       }
     }
-    console.log(data.email, data.password)
-    
    }
 
   return (

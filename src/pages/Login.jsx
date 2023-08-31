@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate } from 'react-router-dom';
+import Cookies from 'js-cookie';
 
 
 export const Login = () => {
@@ -15,8 +16,8 @@ export const Login = () => {
   });
   const navigate = useNavigate();
 
-  const onSubmit = async (data) => {
-    const connect = await fetch("http://127.0.0.1:3000/users/sign_in", {
+  const onSubmit = (data) => {
+    fetch("http://127.0.0.1:3000/users/sign_in", {
       method: "POST",
       headers: {
         "Content-Type" : "application/json"
@@ -27,8 +28,10 @@ export const Login = () => {
           password: data.password
         }
       })
-    });
-    console.log(connect.json());
+    })
+    .then(response => (
+      Cookies.set('token',response.headers.get('Authorization').split(" ")[1])))
+    .then(console.log("Connexion réussie!"))
     navigate('/');
   }
 
