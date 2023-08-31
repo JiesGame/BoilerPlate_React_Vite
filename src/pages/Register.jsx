@@ -3,7 +3,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import APIManager from '../services/axios';
-import { useState } from 'react'
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 export const Register = () => {
   const [errorMessage, setErrorMessage] = useState('');
@@ -14,20 +15,38 @@ export const Register = () => {
     confirmationCGU: yup.bool().oneOf([true], "Vous devez accepter les conditions générales d'utilisation.")
   });
 
+  const navigate = useNavigate();
   const {register, handleSubmit, formState: {errors} } = useForm({
     resolver: yupResolver(schema),
     }
   );
 
   const onSubmit = async (data) => {
+    console.log(data)
     try {
     const response = await APIManager.registerUser(data.email, data.password, data.password_confirmation);
     console.log(response);
+    const connect = await fetch("http://127.0.0.1:3000/users/sign_in", {
+      method: "POST",
+      headers: {
+        "Content-Type" : "application/json"
+      },
+      body: JSON.stringify({
+        user: {
+          email: data.email,
+          password: data.password
+        }
+      })
+    });
+    console.log(connect.json());
+    navigate('/');
     } catch (error) {
       if (error.response && error.response.status === 422) {
-        setErrorMessage("Cet email est déjà pris. Merci d'en sélectionner un autre");
+        setErrorMessage("Cet email est déjà pris. Merci d'en sélectionner un autre.");
       }
     }
+    console.log(data.email, data.password)
+    
    }
 
   return (

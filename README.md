@@ -31,3 +31,11 @@ Installé :
     Cookies
 
     pnpm install js-cookie
+
+    Flash message
+
+    pnpm install react-flash-message
+
+    Jotai
+
+    pnpm install jotai

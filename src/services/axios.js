@@ -13,9 +13,21 @@ API.interceptors.request.use(({ headers, ...config }) => ({
 }));
 
 export default class APIManager {
+
   static async registerUser(email, password, password_confirmation) {
     try {
       const response = await API.post('/users', { "user": {email, password, password_confirmation} });
+      return response.data;
+    } catch (error) {
+      console.error("Registration error:", error.response);
+      throw error;
+    }
+  }
+  static async signInUser(email, password) {
+    try {
+      console.log('on teste')
+      const response = await API.post('/users/sign_in', { "user": {email, password} });
+      console.log(response.data)
       return response.data;
     } catch (error) {
       console.error("Registration error:", error.response);
