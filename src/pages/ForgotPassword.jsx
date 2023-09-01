@@ -9,7 +9,6 @@ import { userAtom } from '../store/atoms';
 export const ForgotPassword = () => {
   const schema = yup.object().shape({
     email: yup.string().required("L'email est requis."),
-    password: yup.string().required(),
   });
 
   const {register, handleSubmit, formState: {errors} } = useForm({
@@ -52,30 +51,23 @@ export const ForgotPassword = () => {
 
   return (
     <div className="w-[26rem]">
-      <p>MOT DE PASSE OUBLIE</p>
       <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
         <div className="mb-4">
+          <h1 className='text-2xl text-center mb-4'>Mot de passe oublié ?</h1>
           <label className="block text-gray-700 text-sm font-bold mb-2">
             Email
           </label>
           <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" placeholder="Email..." {...register('email')} />
           {errors.email?.message && <p className="text-red-500 text-xs">{errors.email?.message}</p>}
         </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 text-sm font-bold mb-2">
-            Mot de passe
-          </label>
-          <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-blue-500" type="password" placeholder="Mot de passe..." {...register('password')} />
-          {errors.password?.message && <p className="text-red-500 text-xs">{errors.password?.message}</p>}
-        </div>
         <div className="flex items-center justify-around">
-          <input type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" value="Se connecter" />
+          <input type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" value="Envoyer le mail" />
+          <Link to="/Login" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
+            Se connecter
+          </Link>
           <Link to="/register" className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800">
             Créer un compte
           </Link>
-          <a className="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" href="#">
-            Mot de passe oublié ?
-          </a>
         </div>
       </form>
       <p className="text-center text-gray-500 text-xs">
