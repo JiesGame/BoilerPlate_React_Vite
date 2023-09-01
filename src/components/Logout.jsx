@@ -1,9 +1,11 @@
 import Cookies from 'js-cookie';
 import { useAtom } from 'jotai';
 import { userAtom } from '../store/atoms';
+import { useNavigate } from 'react-router-dom';
 
 export const Logout = () => {
   const [userInfo, setUserInfo] = useAtom(userAtom)
+  const navigate = useNavigate();
 
   const logout = () => {
     fetch("http://127.0.0.1:3000/users/sign_out", {
@@ -19,16 +21,13 @@ export const Logout = () => {
       }
       return response.json();
     })
-    .then(data => {
-    console.log("Response data:", data);
-    Cookies.remove('token');
-    Cookies.remove('userInfo');
-    setUserInfo({"id":"", "email":"", "token":""})
-    // window.location.reload();)
-    })
     .catch(error => {
         console.error("Fetch error:", error);
     });
+    Cookies.remove('token');
+    Cookies.remove('userInfo');
+    setUserInfo({"id":"", "email":"", "token":""})
+    navigate('/');
   }
 
   return (

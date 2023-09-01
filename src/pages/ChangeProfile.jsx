@@ -9,9 +9,10 @@ import { userAtom } from '../store/atoms';
 
 export const ChangeProfile = () => {
   const schema = yup.object().shape({
-    email: yup.string().required("L'email est requis."),
-    email_confirmation: yup.string().oneOf([yup.ref("email"), null], "Les mots de passe ne correspondent pas").required("La confirmation du mot de passe est nécessaire."),
-    password: yup.string().min(6, "Le mot de passe est nécessaire et doit faire entre 6 et 20 caractères.").max(20, "Le mot de passe est nécessaire et doit faire entre 6 et 20 caractères."),
+    email: yup.string().email("L'adresse mail doit être valide"),
+    email_confirmation: yup.string().oneOf([yup.ref("email"), null], "Les adresses mails ne correspondent pas"),
+    password: yup.string().matches(/.{5,}/, {excludeEmptyString: true, message: 'Le mot de passe doit faire entre 6 et 20 caractères.',
+    }).max(20, "Le mot de passe doit faire entre 6 et 20 caractères."),
     password_confirmation: yup.string().oneOf([yup.ref("password"), null], "Les mots de passe ne correspondent pas"),
     current_password: yup.string().required(),
   });
@@ -23,35 +24,34 @@ export const ChangeProfile = () => {
   const [userInfo, setUserInfo] = useAtom(userAtom)
 
   const onSubmit = (data) => {
-    fetch("http://127.0.0.1:3000/users/sign_in", {
-      method: "POST",
+    const dataToUpdate = ({"user":{"email":data.email, "password":data.password, "current_password":data.current_password}});
+    const userID = JSON.parse(Cookies.get('userInfo')).id
+    console.log(dataToUpdate)
+    fetch(`http://127.0.0.1:3000/users/${userID}`, {
+      method: "PATCH",
       headers: {
-        "Content-Type" : "application/json"
+        "Content-Type" : "application/json",
+        "Authorization" : `Bearer ${Cookies.get('token')}`
       },
-      body: JSON.stringify({
-        "user": {
-          "email": data.email,
-          "password": data.password
-        }
-      })
+      body: JSON.stringify(dataToUpdate)
     })
     .then(response => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
-      }
-      Cookies.set('token',response.headers.get('Authorization').split(" ")[1], { expires: 7 })
+      } else {
+      navigate('/');
       return response.json();
+      }
     })
     .then(data => {
       console.log("Response data:", data);
-      Cookies.set('userInfo', JSON.stringify({"id":data.user.id, "email":data.user.email}), { expires: 7 })
-      setUserInfo({"id":data.user.id, "email":data.user.email, "token":Cookies.get('token')})
+      Cookies.set('userInfo', JSON.stringify({"id":data.id, "email":data.email}), { expires: 7 })
+      setUserInfo({"id":data.id, "email":data.email, "token":Cookies.get('token')})
     })
     .catch(error => {
       console.error("Fetch error:", error);
     });
 
-    navigate('/');
   }
 
   return (
