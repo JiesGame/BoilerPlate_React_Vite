@@ -35,9 +35,6 @@ dependencies:
   react-dotenv:
     specifier: ^0.1.3
     version: 0.1.3
-  react-flash-message:
-    specifier: ^1.0.8
-    version: 1.0.8(react-dom@18.2.0)(react@18.2.0)
   react-hook-form:
     specifier: ^7.45.4
     version: 7.45.4(react@18.2.0)
@@ -2298,17 +2295,6 @@ packages:
       dotenv: 8.6.0
       lodash: 4.17.21
       prettier: 2.8.8
-    dev: false
-
-  /react-flash-message@1.0.8(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-XND1LenvTjZI9SvGgGxF74SDZih1fS+iN304/Lhwd/vukTyBLJ9PrOvJehdf9KkxdWtK3fxmQl+c/cpZktyMVg==}
-    peerDependencies:
-      react: '>=15 <= 17'
-      react-dom: '>=15 <= 17'
-    dependencies:
-      prop-types: 15.8.1
-      react: 18.2.0
-      react-dom: 18.2.0(react@18.2.0)
     dev: false
 
   /react-hook-form@7.45.4(react@18.2.0):
