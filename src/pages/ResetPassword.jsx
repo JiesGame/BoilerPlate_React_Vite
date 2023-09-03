@@ -1,27 +1,29 @@
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useParams } from 'react-router-dom';
 
-export const ForgotPassword = () => {
+export const ResetPassword = () => {
   const schema = yup.object().shape({
-    email: yup.string().required("L'email est requis."),
+    password: yup.string().min(6, "Le mot de passe est nécessaire et doit faire entre 6 et 20 caractères.").max(20, "Le mot de passe est nécessaire et doit faire entre 6 et 20 caractères.").required(),
+    password_confirmation: yup.string().oneOf([yup.ref("password"), null], "Les mots de passe ne correspondent pas").required("La confirmation du mot de passe est nécessaire.")
   });
 
   const {register, handleSubmit, formState: {errors} } = useForm({
     resolver: yupResolver(schema)
   });
   const navigate = useNavigate();
+  const { token } = useParams();
 
   const onSubmit = (data) => {
-    const userEmail = data.email
-    fetch("http://127.0.0.1:3000/password/forgot", {
-      method: "POST",
+    const userPassword = data.password
+    fetch(`http://127.0.0.1:3000/password/reset/${token}`, {
+      method: "PUT",
       headers: {
         "Content-Type" : "application/json"
       },
       body: JSON.stringify({
-        email: userEmail
+        password: userPassword
       })
     })
     .then(response => {
@@ -37,7 +39,7 @@ export const ForgotPassword = () => {
       console.error("Fetch error:", error);
     });
 
-    navigate('/');
+    navigate('/login');
   }
 
   return (
@@ -45,12 +47,19 @@ export const ForgotPassword = () => {
       <div className="w-[26rem]">
         <form className="bg-white shadow-md rounded px-8 pt-6 pb-8 mb-4" onSubmit={handleSubmit(onSubmit)}>
           <div className="mb-4">
-            <h1 className='text-2xl text-center mb-4'>Mot de passe oublié ?</h1>
+            <h1 className='text-2xl text-center mb-4'>Réinitialisation du mot de passe</h1>
             <label className="block text-gray-700 text-sm font-bold mb-2">
-              Email
+              Mot de passe
             </label>
-            <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="text" placeholder="Email..." {...register('email')} />
-            {errors.email?.message && <p className="text-red-500 text-xs">{errors.email?.message}</p>}
+            <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" placeholder="Mot de passe..." {...register('password')} />
+            {errors.password?.message && <p className="text-red-500 text-xs">{errors.password?.message}</p>}
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700 text-sm font-bold mb-2">
+              Confirmation du mot de passe
+            </label>
+            <input className="bg-gray-200 appearance-none border-2 border-gray-200 rounded w-full py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500" type="password" placeholder="Confirmation..." {...register('password_confirmation')} />
+            {errors.password_confirmation?.message && <p className="text-red-500 text-xs">{errors.password_confirmation?.message}</p>}
           </div>
           <div className="flex justify-around">
             <input type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" value="Envoyer le mail" />
