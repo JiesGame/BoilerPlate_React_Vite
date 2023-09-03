@@ -22,6 +22,7 @@
     "react-dotenv": "^0.1.3",
     "react-hook-form": "^7.45.4",
     "react-router-dom": "^6.15.0",
+    "react-toastify": "^9.1.3",
     "tw-elements": "1.0.0-beta3",
     "yup": "^1.2.0"
   },

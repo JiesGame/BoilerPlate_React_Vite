@@ -6,6 +6,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useAtom } from 'jotai';
 import { userAtom } from '../store/atoms';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ChangeProfile = () => {
   const schema = yup.object().shape({
@@ -40,6 +42,16 @@ export const ChangeProfile = () => {
         throw new Error(`HTTP error! Status: ${response.status}`);
       } else {
       navigate('/');
+      toast.info("Votre profil a été mis à jour.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
       return response.json();
       }
     })

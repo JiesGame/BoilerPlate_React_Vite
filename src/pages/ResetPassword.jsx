@@ -2,6 +2,8 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, Link, useParams } from 'react-router-dom';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const ResetPassword = () => {
   const schema = yup.object().shape({
@@ -30,6 +32,17 @@ export const ResetPassword = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
+      navigate('/login');
+      toast.info("Votre mot de passe a été modifié.", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+      });
       return response.json();
     })
     .then(data => {
@@ -38,8 +51,6 @@ export const ResetPassword = () => {
     .catch(error => {
       console.error("Fetch error:", error);
     });
-
-    navigate('/login');
   }
 
   return (
@@ -62,7 +73,7 @@ export const ResetPassword = () => {
             {errors.password_confirmation?.message && <p className="text-red-500 text-xs">{errors.password_confirmation?.message}</p>}
           </div>
           <div className="flex justify-around">
-            <input type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" value="Envoyer le mail" />
+            <input type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" value="Changer son mot de passe" />
           </div>
           <div>
             <p className='mb-2'>
