@@ -2,6 +2,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const ForgotPassword = () => {
   const schema = yup.object().shape({
@@ -32,12 +33,20 @@ export const ForgotPassword = () => {
     })
     .then(data => {
       console.log("Response data:", data);
+      toast.info("Un mail a été envoyé à l'adresse indiqué (sous réserve de l'existence d'un compte).", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
     })
     .catch(error => {
       console.error("Fetch error:", error);
     });
-
-    navigate('/');
   }
 
   return (

@@ -2,6 +2,7 @@ import Cookies from 'js-cookie';
 import { useAtom } from 'jotai';
 import { userAtom } from '../store/atoms';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 export const Logout = () => {
   const [userInfo, setUserInfo] = useAtom(userAtom)
@@ -27,7 +28,17 @@ export const Logout = () => {
     Cookies.remove('token');
     Cookies.remove('userInfo');
     setUserInfo({"id":"", "email":"", "token":""})
-    navigate('/');
+    navigate('/login');
+    toast.info('Vous vous êtes déconnectés.', {
+      position: "top-center",
+      autoClose: 3000,
+      hideProgressBar: true,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: "colored",
+      });
   }
 
   return (

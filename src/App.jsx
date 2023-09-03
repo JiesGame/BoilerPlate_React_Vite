@@ -9,6 +9,8 @@ import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
 import { ChangeProfile } from "./pages/ChangeProfile";
 import { PrivateRoutes } from "./services/PrivateRoutes";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 
@@ -19,8 +21,8 @@ function App() {
         <Routes>
           <Route element={<PrivateRoutes/>}>
             <Route path='change_profile' element={<ChangeProfile />} />
+            <Route path="/" element={<Home />} />
           </Route>
-          <Route path="/" element={<Home />} />
           <Route path="/404" element={<NotFound />} />
           <Route path="*" element={<Navigate to="/404" replace/>}/>
           <Route path='register' element={<Register />} />
@@ -29,6 +31,7 @@ function App() {
           <Route path='reset_password/:token' element={<ResetPassword />} />
         </Routes>
       </Router>
+      <ToastContainer/>
     </>
   );
 }

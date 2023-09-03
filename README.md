@@ -35,3 +35,7 @@ Installé :
     Jotai
 
     pnpm install jotai
+
+    Toastify
+
+    pnpm install react-toastify

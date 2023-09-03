@@ -5,6 +5,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import { useAtom } from 'jotai';
 import { userAtom } from '../store/atoms';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 export const Login = () => {
   const schema = yup.object().shape({
@@ -35,19 +37,30 @@ export const Login = () => {
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
-      Cookies.set('token',response.headers.get('Authorization').split(" ")[1], { expires: 7 })
+      Cookies.set('token',response.headers.get('Authorization').split(" ")[1], { expires: 7 });
       return response.json();
     })
     .then(data => {
       console.log("Response data:", data);
-      Cookies.set('userInfo', JSON.stringify({"id":data.user.id, "email":data.user.email}), { expires: 7 })
-      setUserInfo({"id":data.user.id, "email":data.user.email, "token":Cookies.get('token')})
+      Cookies.set('userInfo', JSON.stringify({"id":data.user.id, "email":data.user.email}), { expires: 7 });
+      setUserInfo({"id":data.user.id, "email":data.user.email, "token":Cookies.get('token')});
+      navigate('/');
+      toast.success('Vous êtes connectés.', {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: true,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "colored",
+        });
     })
     .catch(error => {
       console.error("Fetch error:", error);
     });
 
-    navigate('/');
+
   }
 
   return (
