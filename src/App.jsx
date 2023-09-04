@@ -4,6 +4,7 @@ import { NotFound } from "./pages/NotFound";
 import { Navbar } from "./components/Navbar";
 import { Register } from "./pages/Register";
 import { Login } from "./pages/Login";
+import { Footer } from "./components/Footer";
 import './App.css';
 import { ForgotPassword } from "./pages/ForgotPassword";
 import { ResetPassword } from "./pages/ResetPassword";
@@ -30,6 +31,7 @@ function App() {
           <Route path='forgot_password' element={<ForgotPassword />} />
           <Route path='reset_password/:token' element={<ResetPassword />} />
         </Routes>
+        <Footer />
       </Router>
       <ToastContainer/>
     </>
