@@ -39,3 +39,7 @@ Installé :
     Toastify
 
     pnpm install react-toastify
+
+    PropTypes
+
+    pnpm install --save prop-types
