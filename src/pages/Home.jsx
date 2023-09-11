@@ -1,6 +1,4 @@
 import '../App.css';
-import { toast } from 'react-toastify';
-
 
 export const Home = () => {
 

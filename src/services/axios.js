@@ -1,26 +1,170 @@
-import Axios from 'axios';
+import axios from 'axios';
 import Cookies from 'js-cookie';
 
-const API = Axios.create({ baseURL: 'http://127.0.0.1:3000' });
+const baseURL = import.meta.env.VITE_API_URL;
 
-API.interceptors.request.use(({ headers, ...config }) => ({
-    ...config,
-    headers: {
-        ...headers,
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${headers.Authorization ||  Cookies.get('token')}`,
-    },
-}));
-
-export default class APIManager {
-
-  static async registerUser(email, password, password_confirmation) {
-    try {
-      const response = await API.post('/users', { "user": {email, password, password_confirmation} });
-      return response.data;
-    } catch (error) {
-      console.error("Registration error:", error.response);
-      throw error;
+export const registerFetch = async (data) => {
+  const fetchURL = `${baseURL}/users`
+  const fetchBody = {
+    "user": {
+      "email" : data.email,
+      "password": data.password,
+      "password_confirmation": data.password_confirmation
     }
   }
+  return axios.post(
+    fetchURL, fetchBody
+  )
+  .then(response => {
+    console.log('Response data:', response.data);
+    return response.data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    throw error;
+  });
+}
+
+export const loginFetch = async (data, setUserInfo) => {
+  const fetchURL = `${baseURL}/users/sign_in`
+  const fetchBody = {
+    "user": {
+      "email" : data.email,
+      "password": data.password,
+    }
+  }
+  return axios.post(
+    fetchURL, fetchBody
+  )
+  .then(response => {
+    console.log('Response data:', response.data);
+    Cookies.set('token',response.headers.get('Authorization').split(" ")[1], { expires: 7 });
+    Cookies.set('userInfo', JSON.stringify({"id":response.data.user.id, "email":response.data.user.email}), { expires: 7 });
+    setUserInfo({"id":response.data.user.id, "email":response.data.user.email, "token":Cookies.get('token')});
+    return response.data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    throw error;
+  });
+}
+
+export const logoutFetch = async (setUserInfo) => {
+  const fetchURL = `${baseURL}/users/sign_out`
+  return axios.delete(
+      fetchURL,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('token')}`
+        }
+      }
+    )
+  .then(response => {
+    console.log('Response data:', response.data);
+    Cookies.remove('token');
+    Cookies.remove('userInfo');
+    setUserInfo(null)
+    return response.data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    throw error;
+  });
+}
+
+
+
+
+
+
+
+export const forgotPasswordFetch = async (data) => {
+  const fetchURL = `${baseURL}/password/forgot`
+  const fetchBody = {
+    "email": data.email,
+  }
+  return axios.post(
+    fetchURL, fetchBody
+  )
+  .then(response => {
+    console.log('Response data:', response.data);
+    return response.data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    throw error;
+  });
+}
+
+export const resetPasswordFetch = async (data, token) => {
+  const fetchURL = `${baseURL}/password/reset/${token}`
+  const fetchBody = {
+    "password": data.password,
+  }
+  return axios.put(    
+    fetchURL, fetchBody
+  )
+  .then(response => {
+    console.log('Response data:', response.data);
+    return response.data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    throw error;
+  });
+}
+
+export const changeProfileFetch = async (data, userID, setUserInfo) => {
+  const fetchURL = `${baseURL}/users/${userID}`
+  const fetchBody = {
+    "user": {
+      "email": data.email,
+      "password": data.password,
+      "current_password": data.current_password,
+    },
+  }
+  return axios.put(
+      fetchURL, fetchBody,
+      {
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${Cookies.get('token')}`
+        }
+      }
+    )
+  .then(response => {
+    console.log('Response data:', response.data);
+    Cookies.set("userInfo", JSON.stringify({ id: response.data.id, email: response.data.email }), { expires: 7 });
+    setUserInfo({id: response.data.id, email: response.data.email, token: Cookies.get("token")});
+    return response.data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    throw error;
+  });
+}
+
+export const deleteProfileFetch = async (data, setUserInfo) => {
+  const fetchURL = `${baseURL}/users/destroy_with_password`
+  return axios.post(
+    fetchURL, {data},
+    {
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${Cookies.get('token')}`
+      }
+    }
+  )
+  .then(response => {
+    console.log('Response data:', response.data);
+    Cookies.remove("token");
+    Cookies.remove("userInfo");
+    setUserInfo(null);
+    return response.data
+  })
+  .catch(error => {
+    console.error('Error:', error);
+    throw error;
+  });
 }
